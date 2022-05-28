@@ -1,15 +1,18 @@
-async function main() {
-    const LoanCollateralNFT = await ethers.getContractFactory("LoanCollateral")
-  
-    // Start deployment, returning a promise that resolves to a contract object
-    const loanCollateralNFT = await LoanCollateralNFT.deploy()
-    await loanCollateralNFT.deployed()
-    console.log("Contract deployed to address:", loanCollateralNFT.address)
-  }
-  
-  main()
+const { ethers } = require('hardhat');
+
+const main = async () => {
+
+    const AssetNFT = await ethers.getContractFactory('AssetNFT');
+
+    const assetNFT = await AssetNFT.deploy();
+
+    console.log(`Contract has been deployed to ${assetNFT.address}`);
+
+};
+
+main()
     .then(() => process.exit(0))
-    .catch((error) => {
-      console.error(error)
-      process.exit(1)
-    })
+    .catch(e => {
+        console.log(e);
+        process.exit(1);
+    });

@@ -1,75 +1,146 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "./AssetNFT.sol";
 
-contract loanRequest {
-    enum LoanStatus {UNINITIATED, UNPAID, PAID}
-    
-    ERC721 public collateralNFT;
+contract LoanRequest {
+    AssetNFT public collateralContract;
+    enum LoanStatus {
+        LIVE,
+        FUNDED,
+        EXPIRED,
+        COMPLETED,
+        FAILED
+    }
+
+    // Loan Information
+    address payable borrower;
     uint256 requestAmount;
+    uint256 collateralId;
+    LoanStatus status;
+
+    // Bid Information
+    address payable lender;
     uint256 interestAmount;
-    uint256 requesterId;
-    uint256 lenderId;
-    uint256 loanDuration;
-    uint256 bidDuration;
-    uint256 bidStart;
-    uint256 loanStart;
-    LoanStatus returned;
 
+    // STATIC
+    address payable NULL_ADDRESS;
 
-    struct Collateral {
-        uint256 tokenId; 
-        uint256 timestamp; 
-    }
-
-    mapping(address => Collateral) public collateral;
-
-    
-    constructor(uint256 _requestAmount, uint256 collateralTokenId, uint256 _bidDuration, uint256 _loanDuration) {
-        collateralNFT = ERC721(0);
+    constructor(
+        address payable _borrower,
+        uint256 _requestAmount,
+        uint256 _assetId
+    ) {
+        collateralContract = AssetNFT(
+            0x5FbDB2315678afecb367f032d93F642f64180aa3
+        );
+        borrower = _borrower;
         requestAmount = _requestAmount;
-        requesterId = msg.sender;
-        interestAmount = _requestAmount;
-        lenderId = 0;
-        returned = -1;
-        bidDuration = _bidDuration;
-        loanDuration = _loanDuration;
-        stake(collateralTokenId);
+        collateralId = _assetId;
+        status = LoanStatus.LIVE;
+
+        // Max uint256
+        interestAmount = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
     }
 
-    function stake(uint256 _tokenId) private {
-        collateral[msg.sender] = Collateral(_tokenId, block.timestamp);
-        collateralNFT.safeTransferFrom(msg.sender, address(this), _tokenId, _amount, "0x00");
+    function stake() public {
+        require(msg.sender == borrower, "Only Borrower Can Stake Collateral");
+        collateralContract.safeTransferFrom(
+            borrower,
+            address(this),
+            collateralId
+        );
     }
 
-    function bid(uint256 _bidderId, uint256 _interestAmount) public {
-        if(block.time-bidStart < bidDuration && _interestAmount < interestAmount){
-            lenderId = _bidderId;
-            interestAmount = _interestAmount;
-            return true;
+    function bid(uint256 _interestAmount) public payable {
+        require(
+            msg.value == requestAmount,
+            "Please send the right amount of Ether"
+        );
+        require(
+            _interestAmount < interestAmount,
+            "Need to provide a better bid"
+        );
+        require(
+            status == LoanStatus.LIVE,
+            "The loan is not currently accepting any bids"
+        );
+
+        transferFunds(lender, requestAmount);
+        lender = payable(msg.sender);
+        interestAmount = _interestAmount;
+    }
+
+    function transferFunds(address payable receiver, uint256 amount) private {
+        if (receiver != NULL_ADDRESS) receiver.transfer(amount);
+    }
+
+    function acceptLoanTerms() public {
+        require(
+            msg.sender == borrower,
+            "Terms can only be accepted by the borrower"
+        );
+
+        if (lender == NULL_ADDRESS) {
+            status = LoanStatus.EXPIRED;
+            collateralContract.safeTransferFrom(
+                address(this),
+                borrower,
+                collateralId
+            );
+        } else {
+            status = LoanStatus.FUNDED;
+            transferFunds(borrower, requestAmount);
         }
-        return false;
     }
 
-    function unstake() public {
-        if(msg.sender == requesterId || (msg.sender == lenderId && block.timestamp-loanStart >= loanDuration)){
-            if(returned == LoanStatus.UNITIATED || returned == LoanStatus.PAID)
-                collateralNFT.safeTransferFrom(address(this), requesterId, collateral[msg.sender].tokenId, "Ox00");
-            else
-                collateralNFT.safeTransferFrom(address(this), lenderId, collateral[msg.sender].tokenId, "0x00");
-        delete stakes[msg.sender];
+    function terminateLoan() public payable {
+        require(
+            msg.sender == lender || msg.sender == borrower,
+            "Only Borrower or Lender can Terminate the Contract"
+        );
+        // Payed back
+        if (msg.sender == borrower) {
+            require(
+                msg.value >= requestAmount + interestAmount,
+                "Need to return principle amount and interest"
+            );
+
+            // Send money to the lender
+            transferFunds(lender, requestAmount + interestAmount);
+
+            // Send collateral to the borrower
+            collateralContract.safeTransferFrom(
+                address(this),
+                borrower,
+                collateralId
+            );
+
+            status = LoanStatus.COMPLETED;
+        }
+        // Not payed back
+        else {
+            collateralContract.safeTransferFrom(
+                address(this),
+                lender,
+                collateralId
+            );
+            status = LoanStatus.FAILED;
         }
     }
 
-    function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        bytes calldata data
-    ) external returns (bytes4) {
-        return bytes4(keccak256("onERC1155Received(address,address,uint256,bytes)"));
+    function balanceOf() external view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) public virtual returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
     }
 }

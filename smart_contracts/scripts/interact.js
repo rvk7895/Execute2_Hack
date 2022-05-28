@@ -36,10 +36,7 @@ const getURI = async (tokenId) => {
 }
 
 const main = async () => {
-    // await addNFTToAccount("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", "lmao.jpg");
-    const addr = await getIssuedNFTCount();
-    console.log(addr);
-
+    await addNFTToAccount("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", "lmao.jpg");
 
 }
 

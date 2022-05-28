@@ -1,47 +1,6 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/mnt/d/MyStuff/Development/Hackathons/Execute2/Execute2_Hack/smart_contracts/contracts/LoanCollateral.sol": {
-      "lastModificationDate": 1653748599878,
-      "contentHash": "2df606857746599e45e9bbbbd01a23f3",
-      "sourceName": "contracts/LoanCollateral.sol",
-      "solcConfig": {
-        "version": "0.8.1",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/Counters.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "LoanCollateral"
-      ]
-    },
     "/mnt/d/MyStuff/Development/Hackathons/Execute2/Execute2_Hack/smart_contracts/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
       "lastModificationDate": 1653745849901,
       "contentHash": "21b9f3bdb3e60f56ea81361c37420136",
@@ -553,6 +512,86 @@
       ],
       "artifacts": [
         "IERC721Enumerable"
+      ]
+    },
+    "/mnt/d/MyStuff/Development/Hackathons/Execute2/Execute2_Hack/smart_contracts/contracts/AssetNFT.sol": {
+      "lastModificationDate": 1653760215875,
+      "contentHash": "d7637ac55e29d5e40a438f42d9aee72e",
+      "sourceName": "contracts/AssetNFT.sol",
+      "solcConfig": {
+        "version": "0.8.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/Counters.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AssetNFT"
+      ]
+    },
+    "/mnt/d/MyStuff/Development/Hackathons/Execute2/Execute2_Hack/smart_contracts/contracts/LoanRequest.sol": {
+      "lastModificationDate": 1653768747847,
+      "contentHash": "af54f70c5af9fe7fc0bf02cf76834969",
+      "sourceName": "contracts/LoanRequest.sol",
+      "solcConfig": {
+        "version": "0.8.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+        "./AssetNFT.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "LoanRequest"
       ]
     }
   }
