@@ -6,12 +6,6 @@ const Landing = () => {
 
     const router = useRouter()
 
-    useEffect(() => {
-        if (localStorage.getItem('account')) {
-            router.push('/dashboard')
-        }
-    })
-
     const connectWallet = async () => {
         try {
             const res = await ethereum.request({ method: 'eth_requestAccounts' });
