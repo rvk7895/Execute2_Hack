@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, CircularProgress } from '@mui/material';
 import CustomNavbar from '../../components/navbar';
 import { Button } from '@mui/material'
@@ -8,31 +8,13 @@ import GraphQLClient from 'graphql-client';
 import swal from 'sweetalert';
 
 let Contract = require('../../../smart_contracts/artifacts/contracts/AssetNFT.sol/AssetNFT.json');
+const smartContractAddress = '0x36ad10998708f8020572854572319358EA250aCC'
 
-const smartContractAddress = '0x36ad10998708f8020572854572319358EA250aCC';
-
-
-const createNFT = () => {
-    const [file, setFile] = useState(null);
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+const MyNFTs = () => {
     const [walletKey, setWalletKey] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
-        const mutation = `
-        mutation () {
-            createNft(
-            data: {
-                name: "${name}"
-                image: "${file}"
-                description: "${description}"
-            }
-            ) {
-            id
-            }
-        }
-        `;
         console.log(mutation);
         const client = new GraphQLClient({url:"https://api-ap-south-1.graphcms.com/v2/cl3pq3iqv7fcn01z6bn7whqqw/master",
             headers: {
@@ -65,33 +47,3 @@ const createNFT = () => {
         }
         
     }
-
-    return (
-        <div>
-            <CustomNavbar />
-            <div className="main">
-                
-                {loading?
-                <> 
-                <h1>Creating NFT</h1>
-                <CircularProgress/>
-                </> : 
-                <>
-                <h1>Create NFT</h1>
-                <div style={{ margin: "20px" }}>
-                    <FileBase64 onDone={e => setFile(e.base64)}/>
-                </div>
-                <div className="input-field">
-                    <TextField id="filled-basic" label="Name" variant="filled" onChange={e => setName(e.target.value)} fullWidth />
-                </div>
-                <div className="input-field">
-                    <TextField id="filled-basic" label="Description" variant="filled" onChange={e => setDescription(e.target.value)} multiline fullWidth />
-                </div>
-                    <Button variant="contained" style={{ backgroundColor: "orange", fontSize: "15px", margin: '10px' }} onClick={handleSubmit} >Create</Button>
-                </>}
-            </div>
-        </div>
-    )
-}
-
-export default createNFT;
