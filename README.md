@@ -20,4 +20,4 @@
 To access the webapp head to `localhost:3000`. 
 
 - Smart Contract Information
-We have two smart contracts that are utilized, one that mints NFTs corresponding to the input image (a property deed for instance) and handles its ownership and one that represents the loan. For more information, refer to [The report](report.pdf)
+We have two smart contracts that are utilized, one that mints NFTs corresponding to the input image (a property deed for instance) and handles its ownership and one that represents the loan. For more information, refer to [the report](report.pdf)
