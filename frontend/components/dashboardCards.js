@@ -89,6 +89,10 @@ const DashboardCards = (props) => {
         return false
     }
 
+    const handleRepay = () => {
+        console.log("repay")
+    }
+
     return (
         <Card style={{ maxWidth: "400px", margin: "10px 0" }} className="card">
             <CardContent>
@@ -117,7 +121,7 @@ const DashboardCards = (props) => {
                     {
                         checkAmountRepayable() &&
                         <Grid item xs={12}>
-                            <Button variant="contained" style={{ backgroundColor: "orange", fontSize: "15px" }} fullWidth>Repay</Button>
+                            <Button variant="contained" style={{ backgroundColor: "orange", fontSize: "15px" }} onClick={handleRepay} fullWidth>Repay</Button>
                         </Grid>
                     }
                 </Grid>
