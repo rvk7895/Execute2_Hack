@@ -35,12 +35,10 @@ const Dashboard = () => {
             maxAcceptableBid,
             status: "L"
         }
-        console.log(newItem);
         setItems([...items, newItem]);
         setShowModal(false);
-        // setItems([...items, item]);
-        // setShowModal(false);
     }
+
 
     return (
         <div>
