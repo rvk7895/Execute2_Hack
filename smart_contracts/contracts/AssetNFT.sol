@@ -68,4 +68,18 @@ contract AssetNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     {
         return super.supportsInterface(interfaceId);
     }
+
+    function getTokensOfAddress(address addr)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        uint256 totalTokens = balanceOf(addr);
+        uint256[] memory tokens = new uint256[](totalTokens);
+
+        for (uint256 i = 0; i < totalTokens; i++)
+            tokens[i] = tokenOfOwnerByIndex(addr, i);
+
+        return tokens;
+    }
 }
