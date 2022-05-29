@@ -25,6 +25,11 @@ const CustomNavbar = () => {
                             <a className="nav-link">Create NFT</a>
                         </Link>
                     </li>
+                    <li className="nav-item active">
+                        <Link href="/myNFTs">
+                            <a className="nav-link">My NFTs</a>
+                        </Link>
+                    </li>
                 </ul>
             </div>
         </nav>

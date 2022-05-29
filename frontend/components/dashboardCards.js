@@ -8,12 +8,13 @@ const DashboardCards = (props) => {
     const router = useRouter();
 
     const {
-        amount,
+        principalAmount,
         collateral,
-        currentBid,
+        interest,
         status,
         bidEndDate,
-        collateralReturnDate
+        collateralReturnDate, 
+        bidInProgress
     } = props;
 
     const bidTimeLeft = () => {
@@ -35,7 +36,7 @@ const DashboardCards = (props) => {
     }
 
     const abridgedString = () => {
-        return `${collateral.slice(0, 3)}...${collateral.slice(collateral.length - 3, collateral.length)}`
+        return `${collateral}`
     }
 
     const copyToClipboard = () => {
@@ -43,41 +44,22 @@ const DashboardCards = (props) => {
     }
 
     const getStatus = () => {
-        if (status === 'L') {
+        if (bidInProgress == true) {
             return 'Live'
-        } else if (status === 'Fa') {
-            return 'Failed'
-        } else if (status === 'R') {
-            return 'Returned'
-        } else if (status === 'Fu') {
-            return 'Funded'
-        } else if (status === 'E') {
-            return 'Expired'
-        }
+        } else
+            return 'Inactive'
     }
 
     const getStatusClass = () => {
-        if (status === 'L') {
+        if (bidInProgress) {
             return {
                 color: 'green'
             }
-        } else if (status === 'Fa') {
+        } else {
             return {
                 color: 'red'
             }
-        } else if (status === 'R') {
-            return {
-                color: 'red'
-            }
-        } else if (status === 'Fu') {
-            return {
-                color: 'green'
-            }
-        } else if (status === 'E') {
-            return {
-                color: 'gray'
-            }
-        }
+        } 
     }
 
     const checkAmountRepayable = () => {
@@ -98,13 +80,13 @@ const DashboardCards = (props) => {
             <CardContent>
                 <Grid container>
                     <Grid item xs={12}>
-                        <p className="grid-p"><span style={{ fontWeight: "500" }}>Req. Amount: </span>{amount}</p>
+                        <p className="grid-p"><span style={{ fontWeight: "500" }}>Req. Amount: </span>{principalAmount}</p>
                     </Grid>
                     <Grid item xs={12}>
                         <p className="grid-p" onClick={copyToClipboard}><span style={{ fontWeight: "500" }}>Collateral: </span><span className="click2Copy">{abridgedString()} <ContentCopyIcon style={{ fontSize: "15px" }} /></span></p>
                     </Grid>
                     <Grid item xs={12}>
-                        <p className="grid-p"><span style={{ fontWeight: "500" }}>Current Bid: </span>{currentBid}</p>
+                        <p className="grid-p"><span style={{ fontWeight: "500" }}>Current Bid: </span>{interest}</p>
                     </Grid>
                     <Grid item xs={12}>
                         <p className="grid-p"><span style={{ fontWeight: "500" }}>Status: </span><span style={getStatusClass()}>{getStatus()}</span></p>

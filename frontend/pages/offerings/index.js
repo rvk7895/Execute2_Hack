@@ -6,6 +6,8 @@ import { ethers } from "ethers";
 import BidModal from '../../components/bidModal';
 let data = require('/data/dashboardData.json');
 
+let Contract = require('../../../smart_contracts/artifacts/contracts/AssetNFT.sol/AssetNFT.json');
+
 const Offerings = () => {
     const [balance, setBalance] = useState(0);
     const [items, setItems] = useState([]);
@@ -28,7 +30,7 @@ const Offerings = () => {
         setShowModal(true);
     }
 
-    const handleAddition = (amount, collateral, lastBidDate, lastPayDate, maxAcceptableBid) => {
+    const handleAddition = async (amount, collateral, lastBidDate, lastPayDate, maxAcceptableBid) => {
         const newItem = {
             amount,
             collateral,
